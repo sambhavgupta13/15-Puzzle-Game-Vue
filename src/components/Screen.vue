@@ -77,10 +77,12 @@ export default {
     };
   },
   beforeMount() {
-     let timeInSeconds = getCurrentTimeInSeconds(localStorage.getItem("currentTime"));
-     
-    if (timeInSeconds>0) {
-// if the game is in resume state ask the user if he wants to resume or start a new game
+    let timeInSeconds = getCurrentTimeInSeconds(
+      localStorage.getItem("currentTime")
+    );
+
+    if (timeInSeconds > 0) {
+      // if the game is in resume state ask the user if he wants to resume or start a new game
 
       const status = confirm("You want to resume ?");
       if (status) {
@@ -91,8 +93,7 @@ export default {
         this.countValue = +localStorage.getItem("currentMoves");
       } else {
         this.Time = "00:00";
-        setLocalStorageValues("currentMoves",this.countValue)
-        
+        setLocalStorageValues("currentMoves", this.countValue);
       }
     }
     setLocalStorageValues("currentTime", this.Time);
@@ -140,7 +141,6 @@ export default {
           currentTimeInSeconds++;
         }, 1000);
       } else if (operation.command == "RESET") {
-       
         clearInterval(this.timeInterval);
         this.Time = "00:00";
         setLocalStorageValues("currentTime", this.Time);

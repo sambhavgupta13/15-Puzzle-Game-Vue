@@ -22,7 +22,7 @@ p {
   margin-right: auto;
   left: 10px;
   right: 0;
- color: black;
+  color: black;
 
   text-align: left;
   font-size: 17pt;

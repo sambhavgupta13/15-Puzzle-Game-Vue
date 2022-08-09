@@ -1,18 +1,18 @@
 <template>
-    <div class="Game_header">
-<p>FIFTEEN PUZZLE GAME</p>
-    </div>
+  <div class="Game_header">
+    <p>FIFTEEN PUZZLE GAME</p>
+  </div>
 </template>
 
 <script>
-    export default {
-        name : 'Header'
-    }
+export default {
+  name: "Header",
+};
 </script>
 
 <style scoped>
-p{
-    /* margin-top: 30px; */
+p {
+  /* margin-top: 30px; */
   margin-left: auto;
   margin-right: auto;
   left: 0;

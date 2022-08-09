@@ -1,32 +1,22 @@
 <template>
-
-<Header />
-
+  <Header />
 
   <Screen />
 
-
-
-
   <Footer />
-
-
 </template>
 
 <script>
-import Header from "./components/Header.vue"
+import Header from "./components/Header.vue";
 import Screen from "./components/Screen.vue";
-import Footer from "./components/Footer.vue"
-
+import Footer from "./components/Footer.vue";
 
 export default {
   name: "App",
   components: {
-
     Header,
     Footer,
-        Screen,
-    
+    Screen,
   },
 };
 </script>
