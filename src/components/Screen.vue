@@ -14,27 +14,48 @@
       <div class="Game_screen_activity_controller-buttons">
         <button
           v-show="startGame"
-          @click="toggleTimer({ command: 'START' })"
+          @click="
+            startGameFunction(),
+              (startGame = !startGame),
+              (pauseGame = !pauseGame),
+              (boardCoverShowProp = false)
+          "
           title="Click here to Start "
         >
           <img src="../assets/startIcon.svg" alt="start the game" />
         </button>
         <button
           v-show="pauseGame"
-          @click="toggleTimer({ command: 'PAUSE' })"
+          @click="
+            pauseGameFunction(),
+              (pauseGame = !pauseGame),
+              (boardCoverShowProp = true),
+              (resumeGame = !resumeGame)
+          "
           title="Click here to Pause "
         >
           <img src="../assets/pauseIcon.svg" alt="pause the game" />
         </button>
         <button
           v-show="resumeGame"
-          @click="toggleTimer({ command: 'RESUME' })"
+          @click="
+            resumeGameFunction(),
+              (pauseGame = !pauseGame),
+              (boardCoverShowProp = false),
+              (resumeGame = !resumeGame)
+          "
           title="Click here to Resume "
         >
           <img src="../assets/resumeIcon.svg" alt="resume the game" />
         </button>
         <button
-          @click="toggleTimer({ command: 'RESET' })"
+          @click="
+            resetGameFunction(),
+              (pauseGame = false),
+              (boardCoverShowProp = true),
+              (startGame = true),
+              (resumeGame = false)
+          "
           title="Click here to Reset "
         >
           <img src="../assets/resetIcon.svg" alt="reset the game" />
@@ -47,8 +68,14 @@
       :boardCoverShowToggle="boardCoverShowProp"
       :timeValue="Time"
       @updateCounter="updateCountValue($event)"
-      @boardCoverClicked="toggleTimer({ command: 'RESUME' })"
-      @resetGame="toggleTimer({ command: 'RESET' })"
+      @boardCoverClicked="
+        resumeGameFunction(),
+          (boardCoverShowProp = !boardCoverShowProp),
+          (startGame = false),
+          (pauseGame = true),
+          (resumeGame = false)
+      "
+      @resetGame="resetGameFunction()"
     />
   </div>
 </template>
@@ -106,52 +133,39 @@ export default {
     updateCountValue(value) {
       this.countValue = value;
     },
-    // function to handle start , resume, play and reset events
-    toggleTimer(operation) {
-      if (operation.command == "START") {
-        const timeInSeconds =
-          new Date().getMinutes() * 60 + new Date().getSeconds();
+    startGameFunction() {
+      const timeInSeconds =
+        new Date().getMinutes() * 60 + new Date().getSeconds();
 
-        this.timeInterval = setInterval(() => {
-          const newDate = new Date();
+      this.timeInterval = setInterval(() => {
+        const newDate = new Date();
 
-          const newTime = newDate.getMinutes() * 60 + newDate.getSeconds();
+        const newTime = newDate.getMinutes() * 60 + newDate.getSeconds();
 
-          const currentTime = newTime - timeInSeconds;
-          this.Time = getTimerValue(currentTime);
-        }, 1000);
-        this.startGame = false;
-        this.pauseGame = true;
-        this.boardCoverShowProp = false;
-      } else if (operation.command == "PAUSE") {
-        clearInterval(this.timeInterval);
-        this.startGame = false;
-        this.pauseGame = false;
-        this.resumeGame = true;
-        this.boardCoverShowProp = true;
-      } else if (operation.command == "RESUME") {
-        let currentTimeInSeconds = getCurrentTimeInSeconds(this.Time);
+        const currentTime = newTime - timeInSeconds;
+        this.Time = getTimerValue(currentTime);
+      }, 1000);
+    },
+    pauseGameFunction() {
+      clearInterval(this.timeInterval);
+    },
+    resumeGameFunction() {
+      let currentTimeInSeconds = getCurrentTimeInSeconds(this.Time);
+      currentTimeInSeconds++;
+      this.timeInterval = setInterval(() => {
+        this.Time = getTimerValue(currentTimeInSeconds);
         currentTimeInSeconds++;
-        this.resumeGame = false;
-        this.pauseGame = true;
-        this.startGame = false;
-        this.boardCoverShowProp = false;
-        this.timeInterval = setInterval(() => {
-          this.Time = getTimerValue(currentTimeInSeconds);
-          currentTimeInSeconds++;
-        }, 1000);
-      } else if (operation.command == "RESET") {
-        clearInterval(this.timeInterval);
-        this.Time = "00:00";
-        setLocalStorageValues("currentTime", this.Time);
-        this.startGame = true;
-        this.pauseGame = false;
-        this.resumeGame = false;
-        this.resetGame = true;
-        this.boardCoverShowProp = true;
-        this.countValue = 0;
-        setLocalStorageValues("currentMoves", this.countValue);
-      }
+      }, 1000);
+    },
+    resetGameFunction() {
+      clearInterval(this.timeInterval);
+      this.Time = "00:00";
+      setLocalStorageValues("currentTime", this.Time);
+
+      this.resetGame = true;
+
+      this.countValue = 0;
+      setLocalStorageValues("currentMoves", this.countValue);
     },
   },
 };

@@ -1,124 +1,19 @@
 <template>
   <div class="Game_screen_board-container">
     <div class="Game_screen_board-container_board">
-      <div class="Game_screen_board-container_board_row">
+      <div
+        class="Game_screen_board-container_board_row"
+        v-for="i in 4"
+        :key="i"
+      >
         <button
-          @click="clickedBlock($event, 0)"
-          :value="puzzleArray[0]"
-          :style="{ backgroundColor: backgroundMap.get(0).color }"
+          v-for="num in this.giverange(i)"
+          :key="num"
+          @click="clickedBlock($event, +num)"
+          :value="puzzleArray[num]"
+          :style="{ backgroundColor: this.backgroundMap.get(+num)['color'] }"
         >
-          <p>{{ puzzleArray[0] }}</p>
-        </button>
-        <button
-          @click="clickedBlock($event, 1)"
-          :value="puzzleArray[1]"
-          :style="{ backgroundColor: backgroundMap.get(1).color }"
-        >
-          <p>{{ puzzleArray[1] }}</p>
-        </button>
-        <button
-          @click="clickedBlock($event, 2)"
-          :value="puzzleArray[2]"
-          :style="{ backgroundColor: backgroundMap.get(2).color }"
-        >
-          <p>{{ puzzleArray[2] }}</p>
-        </button>
-        <button
-          @click="clickedBlock($event, 3)"
-          :value="puzzleArray[3]"
-          :style="{ backgroundColor: backgroundMap.get(3).color }"
-        >
-          <p>{{ puzzleArray[3] }}</p>
-        </button>
-      </div>
-      <div class="Game_screen_board-container_board_row">
-        <button
-          @click="clickedBlock($event, 4)"
-          :value="puzzleArray[4]"
-          :style="{ backgroundColor: backgroundMap.get(4).color }"
-        >
-          <p>{{ puzzleArray[4] }}</p>
-        </button>
-        <button
-          @click="clickedBlock($event, 5)"
-          :value="puzzleArray[5]"
-          :style="{ backgroundColor: backgroundMap.get(5).color }"
-        >
-          <p>{{ puzzleArray[5] }}</p>
-        </button>
-        <button
-          @click="clickedBlock($event, 6)"
-          :value="puzzleArray[6]"
-          :style="{ backgroundColor: backgroundMap.get(6).color }"
-        >
-          <p>{{ puzzleArray[6] }}</p>
-        </button>
-        <button
-          @click="clickedBlock($event, 7)"
-          :value="puzzleArray[7]"
-          :style="{ backgroundColor: backgroundMap.get(7).color }"
-        >
-          <p>{{ puzzleArray[7] }}</p>
-        </button>
-      </div>
-      <div class="Game_screen_board-container_board_row">
-        <button
-          @click="clickedBlock($event, 8)"
-          :value="puzzleArray[8]"
-          :style="{ backgroundColor: backgroundMap.get(8).color }"
-        >
-          <p>{{ puzzleArray[8] }}</p>
-        </button>
-        <button
-          @click="clickedBlock($event, 9)"
-          :value="puzzleArray[9]"
-          :style="{ backgroundColor: backgroundMap.get(9).color }"
-        >
-          <p>{{ puzzleArray[9] }}</p>
-        </button>
-        <button
-          @click="clickedBlock($event, 10)"
-          :value="puzzleArray[10]"
-          :style="{ backgroundColor: backgroundMap.get(10).color }"
-        >
-          <p>{{ puzzleArray[10] }}</p>
-        </button>
-        <button
-          @click="clickedBlock($event, 11)"
-          :value="puzzleArray[11]"
-          :style="{ backgroundColor: backgroundMap.get(11).color }"
-        >
-          <p>{{ puzzleArray[11] }}</p>
-        </button>
-      </div>
-      <div class="Game_screen_board-container_board_row">
-        <button
-          @click="clickedBlock($event, 12)"
-          :value="puzzleArray[12]"
-          :style="{ backgroundColor: backgroundMap.get(12).color }"
-        >
-          <p>{{ puzzleArray[12] }}</p>
-        </button>
-        <button
-          @click="clickedBlock($event, 13)"
-          :value="puzzleArray[13]"
-          :style="{ backgroundColor: backgroundMap.get(13).color }"
-        >
-          <p>{{ puzzleArray[13] }}</p>
-        </button>
-        <button
-          @click="clickedBlock($event, 14)"
-          :value="puzzleArray[14]"
-          :style="{ backgroundColor: backgroundMap.get(14).color }"
-        >
-          <p>{{ puzzleArray[14] }}</p>
-        </button>
-        <button
-          @click="clickedBlock($event, 15)"
-          :value="puzzleArray[15]"
-          :style="{ backgroundColor: backgroundMap.get(15).color }"
-        >
-          <p>{{ puzzleArray[15] }}</p>
+          {{ puzzleArray[num] }}
         </button>
       </div>
     </div>
@@ -153,6 +48,7 @@ export default {
   props: ["reset", "boardCoverShowToggle", "timeValue"],
 
   beforeMount() {
+  
     let timeInSeconds = getCurrentTimeInSeconds(this.timeValue);
     // check if the game is in a state which can be resumed or not
     if (timeInSeconds > 0) {
@@ -164,6 +60,7 @@ export default {
       const index = this.puzzleArray.indexOf("");
       this.puzzleArray[index] = null; // this will replace that empty space value with null value as we have it in our initial puzzleArray
       this.changeBackground();
+      
       this.movesCount = +localStorage.getItem("currentMoves");
       this.boardDisplayText = "PAUSED";
     } else {
@@ -173,6 +70,7 @@ export default {
 
       setLocalStorageValues("currentPositions", this.puzzleArray);
     }
+  
   },
 
   watch: {
@@ -208,6 +106,14 @@ export default {
   },
 
   methods: {
+    giverange(start) {
+      console.log(start);
+      let rangeArray = [];
+      for (let i = 4 * (start - 1); i <= 4 * start - 1; i++) {
+        rangeArray.push(i);
+      }
+      return rangeArray;
+    },
     // Function that gives  a solvable puzzle
     giveSolvablePuzzle() {
       let newArray = this.giveRandomPuzzle();
@@ -289,6 +195,8 @@ export default {
     },
 
     clickedBlock(event, value) {
+    
+
       this.checkForEmptyBlock(value);
     },
 
